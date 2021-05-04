@@ -1,0 +1,63 @@
+---
+title: "test"
+author: "Kevin Jin"
+date: "4/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(httr)
+library(shiny)
+library(ggplot2)
+library(hexbin)
+library(jsonlite)
+#runGitHub("ballr", "toddwschneider") ## Close out of this shiny app when everything ends
+#write.csv(players, "players.csv")
+```
+
+```{r}
+
+players <- read.csv("Data/players.csv") %>%
+  rename(Player = display_first_last) %>%
+  select(Player, person_id)
+bbalref <- read.csv("Data/bballref_player_data.csv")
+test <- inner_join(players, bbalref, by = "Player") 
+```
+
+```{r}
+test <- test %>%
+  mutate(season = paste0(year -1, "-", (year %% 100))) %>%
+  select(Player, person_id, year, season) %>%
+  distinct()
+```
+
+```{r}
+df <- data.frame()
+#df <- read.csv("Data/total_shot_data.csv") %>%
+#  select(-c(X))
+```
+
+```{r}
+stuck = 4732
+for(i in 4733:nrow(test)){
+  stats <- fetch_shots_by_player_id_and_season(player_id= test$person_id[i]
+                                    , season = test$season[i]
+                                    , season_type = "Regular Season")
+  stats <- stats$player %>%
+    mutate(season = test$season[i])
+  df <- rbind(df, stats)
+  print(i)
+  ## Timer to not get kicked by API
+  if(i %% 15 == 0){
+    Sys.sleep(5)
+    print("Done Sleeping")
+  }
+}
+
+```
+
+```{r}
+write.csv(df, "Data/df.csv")
+```
