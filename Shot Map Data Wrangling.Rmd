@@ -1,0 +1,24 @@
+---
+title: "test"
+author: "Kevin Jin"
+date: "4/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(httr)
+library(shiny)
+library(ggplot2)
+library(hexbin)
+library(jsonlite)
+runGitHub("ballr", "toddwschneider") ## Close out of this shiny app when everything ends
+```
+```{r}
+#df <- data.frame()
+df <- read.csv("Data/total_shot_data.csv") %>%
+  select(-c(X))
+test <- df %>%
+  filter(shot_zone_basic != "Restricted Area")
+```
