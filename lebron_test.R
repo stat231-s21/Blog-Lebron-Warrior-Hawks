@@ -1,6 +1,6 @@
 library(dplyr)
 library(mosaic)
-
+library(purrr)
 name <- "LeBron James"
 select_year <- 2021
 all_players <- read.csv("Data/all_player_data.csv") %>%
@@ -34,16 +34,25 @@ player_comparison <- function(data, player_name, year) {
   )
 }
 
-x <- player_comparison(all_players_norm, name, select_year)
+#x <- player_comparison(all_players_norm, name, select_year)
 
 
 player_data <- all_players_norm %>%
   filter(Player == name, year == select_year)
 other_data <- all_players_norm %>%
-  filter(Player != name)
-other_data <- other_data %>%
-  rowwise() %>%
-  mutate(euc = euc.dist(player_data[3:46], other_data[., 3:46]))
-other_data <-  other_data %>%
-  sort(desc(euc))
-other_data[1, ]
+  filter(Player != name) %>%
+  mutate(euc = 0)
+
+for(i in 1:nrow(other_data)){
+  euc <-  euc.dist(player_data[3:46], other_data[i, 3:46])
+  other_data[i, 47] = euc
+}
+
+other_data %>%
+  arrange(euc) %>%
+  select(Player, year, euc)
+
+df <- tibble(x = 1:2, y = 3:4, z = 5:6)
+
+df %>%
+  mutate(col4 = pmap_dbl(.[c(1:3)], ~ sd(c(...))))
