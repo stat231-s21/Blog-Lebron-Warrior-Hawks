@@ -3,7 +3,6 @@ library(mosaic)
 
 name <- "LeBron James"
 select_year <- 2021
-setwd("~/git/Broken Blog-Lebron-Warrior-Hawks")
 all_players <- read.csv("Data/all_player_data.csv") %>%
   select(-c("Tm", "Pos", "Rk", "G", "GS"))
 all_players[is.na(all_players)] = 0
