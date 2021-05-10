@@ -1,72 +1,7 @@
----
-title: "test"
-author: "Kevin Jin"
-date: "4/27/2021"
-output: html_document
----
-
-```{r setup, include=FALSE, message = FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(dplyr)
-library(httr)
-library(shiny)
-library(ggplot2)
-library(hexbin)
-library(jsonlite)
-#runGitHub("ballr", "toddwschneider") ## Close out of this shiny app when everything ends
-#write.csv(court_points, "Data/court_points.csv")
-```
-```{r}
-generate_heatmap_chart = function(shots, base_court, court_theme = court_themes$dark) {
-  base_court +
-    stat_density_2d(
-      data = shots,
-      aes(x = loc_x, y = loc_y, fill = stat(density / max(density))),
-      geom = "raster", contour = FALSE, interpolate = TRUE, n = 200
-    ) +
-    geom_path(
-      data = court_points,
-      aes(x = x, y = y, group = desc),
-      color = court_theme$lines
-    ) +
-    scale_fill_viridis_c(
-      "Shot Frequency    ",
-      limits = c(0, 1),
-      breaks = c(0, 1),
-      labels = c("lower", "higher"),
-      option = "inferno",
-      guide = guide_colorbar(barwidth = 15)
-    ) +
-    theme(legend.text = element_text(size = rel(0.6)))
-}
-```
-
-```{r}
-court_themes = list(
-  light = list(
-    court = '#fffcf2',
-    lines = '#999999',
-    text = '#222222',
-    made = '#00bfc4',
-    missed = '#f8766d',
-    hex_border_size = 0.3,
-    hex_border_color = "#cccccc"
-  ),
-  dark = list(
-    court = '#000004',
-    lines = '#999999',
-    text = '#f0f0f0',
-    made = '#00bfc4',
-    missed = '#f8766d',
-    hex_border_size = 0,
-    hex_border_color = "#000000"
-  )
-)
-
 circle_points = function(center = c(0, 0), radius = 1, npoints = 360) {
   angles = seq(0, 2 * pi, length.out = npoints)
   return(tibble(x = center[1] + radius * cos(angles),
-                    y = center[2] + radius * sin(angles)))
+                y = center[2] + radius * sin(angles)))
 }
 
 width = 50
@@ -88,34 +23,34 @@ plot_court = function(court_theme = court_themes$dark, use_short_three = FALSE) 
     three_point_radius = 22
     three_point_side_height = 0
   }
-
+  
   court_points = tibble(
     x = c(width / 2, width / 2, -width / 2, -width / 2, width / 2),
     y = c(height, 0, 0, height, height),
     desc = "perimeter"
   )
-
+  
   court_points = bind_rows(court_points , tibble(
     x = c(outer_key_width / 2, outer_key_width / 2, -outer_key_width / 2, -outer_key_width / 2),
     y = c(0, key_height, key_height, 0),
     desc = "outer_key"
   ))
-
+  
   court_points = bind_rows(court_points , tibble(
     x = c(-backboard_width / 2, backboard_width / 2),
     y = c(backboard_offset, backboard_offset),
     desc = "backboard"
   ))
-
+  
   court_points = bind_rows(court_points , tibble(
     x = c(0, 0), y = c(backboard_offset, backboard_offset + neck_length), desc = "neck"
   ))
-
+  
   foul_circle = circle_points(center = c(0, key_height), radius = inner_key_width / 2)
-
+  
   foul_circle_top = filter(foul_circle, y > key_height) %>%
     mutate(desc = "foul_circle_top")
-
+  
   foul_circle_bottom = filter(foul_circle, y < key_height) %>%
     mutate(
       angle = atan((y - key_height) / x) * 180 / pi,
@@ -124,23 +59,23 @@ plot_court = function(court_theme = court_themes$dark, use_short_three = FALSE) 
     ) %>%
     filter(angle_group %% 2 == 0) %>%
     select(x, y, desc)
-
+  
   hoop = circle_points(center = c(0, hoop_center_y), radius = hoop_radius) %>%
     mutate(desc = "hoop")
-
+  
   restricted = circle_points(center = c(0, hoop_center_y), radius = 4) %>%
     filter(y >= hoop_center_y) %>%
     mutate(desc = "restricted")
-
+  
   three_point_circle = circle_points(center = c(0, hoop_center_y), radius = three_point_radius) %>%
     filter(y >= three_point_side_height, y >= hoop_center_y)
-
+  
   three_point_line = tibble(
     x = c(three_point_side_radius, three_point_side_radius, three_point_circle$x, -three_point_side_radius, -three_point_side_radius),
     y = c(0, three_point_side_height, three_point_circle$y, three_point_side_height, 0),
     desc = "three_point_line"
   )
-
+  
   court_points = bind_rows(
     court_points,
     foul_circle_top,
@@ -149,9 +84,9 @@ plot_court = function(court_theme = court_themes$dark, use_short_three = FALSE) 
     restricted,
     three_point_line
   )
-
+  
   court_points <<- court_points
-
+  
   ggplot() +
     geom_path(
       data = court_points,
@@ -176,23 +111,3 @@ plot_court = function(court_theme = court_themes$dark, use_short_three = FALSE) 
       legend.text = element_text(size = rel(1.0))
     )
 }
-```
-
-```{r}
-#df <- data.frame()
-df <- read.csv("../Data/total_shot_data.csv") %>%
-  select(-c(X))
-test <- df %>%
-  filter(shot_zone_basic != "Restricted Area")
-court_points <- read.csv("Data/court_points.csv") %>%
-  select(-c(X))
-```
-
-```{r}
-test %>%
-  filter(season == "2010-11") %>%
-  generate_heatmap_chart(
-    base_court = plot_court(court_themes$dark),
-    court_theme = court_themes$dark
-  )
-```
