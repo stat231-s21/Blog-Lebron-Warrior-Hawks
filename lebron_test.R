@@ -1,6 +1,5 @@
 library(dplyr)
 library(mosaic)
-library(purrr)
 
 name <- "LeBron James"
 select_year <- 2021
