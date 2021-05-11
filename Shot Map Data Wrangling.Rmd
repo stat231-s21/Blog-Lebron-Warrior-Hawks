@@ -190,9 +190,11 @@ court_points <- read.csv("Data/court_points.csv") %>%
 
 ```{r}
 test %>%
-  filter(season == "2010-11") %>%
+  filter(season == "2020-21") %>%
   generate_heatmap_chart(
     base_court = plot_court(court_themes$dark),
     court_theme = court_themes$dark
+  ) + labs(
+    title = "Test?"
   )
 ```

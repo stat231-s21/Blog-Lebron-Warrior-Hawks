@@ -11,10 +11,10 @@ all_players <- all_players %>%
   group_by(year, Player) %>%
   summarise(
     across(1:44, mean)
-  )
+  ) %>%
+  filter(VORP > 1)
 
 euc.dist <- function(x1, x2) sqrt(sum((x1 - x2) ^ 2))
-euc.dist(all_players[1, 3:46], all_players[2, 3:46])
 min_max_norm <- function(x) {
   (x - min(x)) / (max(x) - min(x))
 }
@@ -38,7 +38,7 @@ player_comparison <- function(data, player_name, year) {
     results
   )
 }
-
+write.csv(all_players_norm, "Data/all_players_norm.csv")
 #x <- player_comparison(all_players_norm, name, select_year)
 
 
