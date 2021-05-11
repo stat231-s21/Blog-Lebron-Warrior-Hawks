@@ -51,6 +51,7 @@ server <- function(input,output){
   
   ## data for selected player in 2021
   ## data for all other players for all other seasons
+  
   data_for_table <- reactive({
     ## When user changes/adds players, filter the dataset for them
     data <- all_players_norm %>%
@@ -59,8 +60,8 @@ server <- function(input,output){
     player <- all_players_norm %>%
       filter(Player == input$Player_Stats & year == 2021)
     for(i in 1:nrow(data)){
-      euc <-  euc.dist(player[3:46], data[i, 3:46])
-      data[i, 47] = euc
+      euc <-  euc.dist(player[4:47], data[i, 4:47])
+      data[i, 48] = euc
     }
     return(
       data

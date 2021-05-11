@@ -33,9 +33,9 @@ generate_heatmap_chart = function(shots, base_court, court_theme = court_themes$
       "Shot Frequency    ",
       limits = c(0, 1),
       breaks = c(0, 1),
-      labels = c("lower", "higher"),
+      labels = c("low", "high        "),
       option = "inferno",
-      guide = guide_colorbar(barwidth = 15)
+      guide = guide_colorbar(barwidth = 7)
     ) +
     theme(legend.text = element_text(size = rel(0.6)))
 }
@@ -182,19 +182,20 @@ plot_court = function(court_theme = court_themes$dark, use_short_three = FALSE) 
 #df <- data.frame()
 df <- read.csv("../Data/total_shot_data.csv") %>%
   select(-c(X))
-test <- df %>%
+output <- df %>%
   filter(shot_zone_basic != "Restricted Area")
 court_points <- read.csv("Data/court_points.csv") %>%
   select(-c(X))
 ```
 
 ```{r}
-test %>%
-  filter(season == "2020-21") %>%
+output %>%
+  filter(season == "2015-16") %>%
   generate_heatmap_chart(
     base_court = plot_court(court_themes$dark),
     court_theme = court_themes$dark
   ) + labs(
-    title = "Test?"
+    title = "Heat Map of All Shots",
+    subtitle = "2015-16 Season"
   )
 ```
