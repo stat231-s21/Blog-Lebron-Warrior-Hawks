@@ -54,19 +54,24 @@ server <- function(input,output){
   
   data_for_table <- reactive({
     ## When user changes/adds players, filter the dataset for them
-    data <- all_players_norm %>%
+    player_data <- all_players_norm %>%
+      filter(Player == input$Player_Stats, year == 2021)
+    #Creates other player season dataset
+    other_data <- all_players_norm %>%
       filter(Player != input$Player_Stats) %>%
       mutate(euc = 0)
-    player <- all_players_norm %>%
-      filter(Player == input$Player_Stats & year == 2021)
-    for(i in 1:nrow(data)){
-      euc <-  euc.dist(player[4:47], data[i, 4:47])
-      data[i, 48] = euc
+    #for loop for euclidean distance
+    for(i in 1:nrow(other_data)){
+      euc <-  round(euc.dist(player_data[4:47], other_data[i, 4:47]),3)
+      other_data[i, 48] = euc
     }
-    return(
-      data
-    )
+    other_data %>%
+      arrange(euc) %>%
+      select(Player, year, euc) %>%
+      head(20)%>%
+      return()
   })
+
   output$table <- DT::renderDataTable({ 
     data_for_table()
   })
