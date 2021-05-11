@@ -13,6 +13,7 @@ library(shiny)
 library(ggplot2)
 library(hexbin)
 library(jsonlite)
+library(tidyr)
 #runGitHub("ballr", "toddwschneider") ## Close out of this shiny app when everything ends
 #write.csv(court_points, "Data/court_points.csv")
 ```
@@ -35,7 +36,7 @@ generate_heatmap_chart = function(shots, base_court, court_theme = court_themes$
       breaks = c(0, 1),
       labels = c("low", "high        "),
       option = "inferno",
-      guide = guide_colorbar(barwidth = 7)
+      guide = guide_colorbar(barwidth = 10)
     ) +
     theme(legend.text = element_text(size = rel(0.6)))
 }
@@ -189,13 +190,50 @@ court_points <- read.csv("Data/court_points.csv") %>%
 ```
 
 ```{r}
-output %>%
-  filter(season == "2015-16") %>%
+for(i in 0:10){
+  curr_season = paste0(2010 + i,"-",11+i)
+  output %>%
+  filter(season == curr_season) %>%
   generate_heatmap_chart(
     base_court = plot_court(court_themes$dark),
     court_theme = court_themes$dark
   ) + labs(
     title = "Heat Map of All Shots",
-    subtitle = "2015-16 Season"
+    subtitle = paste(curr_season, "Season")
   )
+  ggsave(paste0(curr_season, ".png"))
+
+}
+
+```
+```{r}
+output %>%
+  filter(season == "2010-11") %>%
+  generate_heatmap_chart(
+    base_court = plot_court(court_themes$dark),
+    court_theme = court_themes$dark
+  ) + labs(
+    title = "Heat Map of All Shots",
+    subtitle = "2010-11 Season"
+  )
+```
+```{r}
+output %>%
+  filter(season == "2017-18") %>%
+  generate_heatmap_chart(
+    base_court = plot_court(court_themes$dark),
+    court_theme = court_themes$dark
+  ) + labs(
+    title = "Heat Map of All Shots",
+    subtitle = "2017-18 Season"
+  )
+```
+
+```{r}
+season_zones <- df %>%
+  group_by(season, shot_zone_basic) %>%
+  summarise(
+    count = n()
+  ) %>% 
+  pivot_wider()
 ```

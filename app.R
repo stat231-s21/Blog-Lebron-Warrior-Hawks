@@ -5,6 +5,7 @@ library(DT)
 library(ggrepel)
 library(lubridate)
 library(bslib)
+library(shinycssloaders)
 ## Import Data
 all_players_norm <- read.csv("Data/all_players_norm.csv")
 
@@ -24,21 +25,25 @@ ui <- navbarPage(
   title = "NBA Stats",
  
   tabPanel(
-    title = "Player Table",
+    title = "Historical Player Comparison",
     
     sidebarLayout(
       ## user selects players to display Data
       sidebarPanel(
         selectizeInput(inputId = "Player_Stats"
-                       , label = "Choose a player:"
+                       , label = "Choose a player in the current season:"
                        , choices = player_choices
                        , selected = "LeBron James"
                        , multiple = FALSE),
         ## Added NBA Logo to Side Panel
+        h6("Table loading takes time (~90 seconds). Please be patient. Thank you!"),
         img(src = "nbalogo.jpeg", height = 290, width = 150)
       ),
       mainPanel(
-        DT::dataTableOutput(outputId = "table")
+        shinycssloaders::withSpinner(
+          DT::dataTableOutput(outputId = "table")
+        ),
+        p("Note: A lower euclidian distance (euc) means higher similarity")
       )
     )
   )
@@ -68,6 +73,7 @@ server <- function(input,output){
     other_data %>%
       arrange(euc) %>%
       select(Player, year, euc) %>%
+      rename(Season = year) %>%
       head(20)%>%
       return()
   })

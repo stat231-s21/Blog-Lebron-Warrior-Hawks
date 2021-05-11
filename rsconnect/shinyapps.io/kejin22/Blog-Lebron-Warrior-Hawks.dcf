@@ -1,0 +1,13 @@
+name: Blog-Lebron-Warrior-Hawks
+title: Blog-Lebron-Warrior-Hawks
+username:
+account: kejin22
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4115884
+bundleId: 4586803
+url: https://kejin22.shinyapps.io/Blog-Lebron-Warrior-Hawks/
+when: 1620756636.97391
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: bballrefPlayerStats.R|court_themes.R|Data Extraction and Wrangling.Rmd|index.html|index.Rmd|lebron_test.R|plot_court.R|PUG_Blog_Project.pdf|README.md|Shot Map Data Wrangling.Rmd|testing.Rmd|Data/bballref_player_data.csv|Data/court_points.csv|Data/players.csv|images/s2g1-economics-sports.png
