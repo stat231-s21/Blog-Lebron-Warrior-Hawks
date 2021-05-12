@@ -188,10 +188,11 @@ output <- df %>%
   filter(shot_zone_basic != "Restricted Area")
 court_points <- read.csv("Data/court_points.csv") %>%
   select(-c(X))
+shot_zone_basic_list = c("Above the Break 3", "Backcourt", "In The Paint (Non-RA)", "Left Corner 3", "Mid-Range", "Restricted Area", "Right Corner 3")
+
 ```
 
 ```{r}
-shot_zone_basic_list = c("Above the Break 3", "Backcourt", "In The Paint (Non-RA)", "Left Corner 3", "Mid-Range", "Restricted Area", "Right Corner 3")
 for(i in 0:10){
   curr_season = paste0(2010 + i,"-",11+i)
   output %>%
