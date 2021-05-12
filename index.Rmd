@@ -19,8 +19,52 @@ library(kableExtra)
 # Introduction
 
 # Shot Data and Mapping
+To get the shot data, we found a `R` package online which gets shot map data from the NBA stats website and API called BallR (`ballr`). 
 
 ## Shot Data using `ballr` package and the NBA API
+The BallR  package uses the NBA Stats API to help visualize shots taken by a player for a season. To run BallR, we have to run the following code in the console (taken from the BallR documentation).
+
+```{r, eval = FALSE}
+packages = c("shiny", "tidyverse", "hexbin")
+install.packages(packages, repos = "https://cran.rstudio.com/")
+library(shiny)
+runGitHub("ballr", "toddwschneider")
+```
+
+This will run the shiny app locally on your computer and will load the following functions and methods that we will need to use to generate a heat map of shot density: 
+
+- `court_maps.csv`, which is a dataframe that holds all the points of the different zones of a basketball court, like a map
+- `plot_court.R` and `plot_theme.R`, which are methods needed to draw the court
+- `generate_heatmap_chart`, which is a function used to generate the heat map of shot data
+- `fetch_shots_by_player_id_and_season` which is a function used to get shot data from the NBA API using a player's ID and the season they were playing in.
+
+The last function is a function we used to collect all the shot map data for all players in all season. To do this, we had to figure out all the player ID's for all the players from the seasons between 2010 and 2021. After that, we iterated through every combination of player ID and season (if they played in that season) and used the fetch shots function to get all the shot data for all players. Running this code, we noticed that there seemed to be a hard limit of around 600, so we had to hard reset the function everytime it reached the limit. Some example code below shows our method to extract all the shot map data. 
+
+```{r, eval = FALSE}
+for(i in 1:nrow(player_stats)){
+  ## for a dataframe called player_stats which has a player_id and season columns
+  stats <- fetch_shots_by_player_id_and_season(player_id= player_stats$person_id[i]
+                                    , season = test$season[i]
+                                    , player_stats = "Regular Season")
+  stats <- stats$player %>%
+    mutate(season = test$season[i])
+  
+  ## df is our final data set we are outputting
+  df <- rbind(df, stats)
+
+  ## uncomment if you want to see the code running to make sure it isn't frozen
+  #print(i)
+  
+  ## Timer to not get kicked by API too fast
+  if(i %% 15 == 0){
+    Sys.sleep(5)
+    #print("Done Sleeping")
+  }
+}
+write.csv(df, "Data/total_shot_data.csv")
+```
+
+Our final data set was a `.csv` file that was over half a gigabyte in memory and over 1.9 million observations, after running our code for a few hours. 
 
 # Player Season Data
 
