@@ -27,40 +27,16 @@ library(kableExtra)
 # Shot Type Graph and Table
 
 ```{r, line_graph, echo = FALSE, message = FALSE}
-df <- read.csv("../Data/total_shot_data.csv") %>%
+stat_names <- c("In The Paint (Non-RA)", "Mid-Range", "Restricted Area", "Three-pointers")
+
+season_zones_table <- read.csv("Data/season_zones_table.csv") %>%
   select(-c(X))
-shot_zone_basic_list = c("Above the Break 3", "Backcourt", "In The Paint (Non-RA)", "Left Corner 3", "Mid-Range", "Restricted Area", "Right Corner 3")
-
-season_zones <- df %>%
-  group_by(season, shot_zone_basic) %>%
-  summarise(
-    count = n()
-  ) %>% 
-  filter(shot_zone_basic %in% shot_zone_basic_list) %>%
-  mutate(shot_zone = case_when(grepl("3", shot_zone_basic) ~ "Three-pointers",
-                               shot_zone_basic == "Backcourt" ~ "Three-pointers",
-                               TRUE ~ shot_zone_basic)) %>%
-  group_by(season, shot_zone) %>%
-  summarise(
-    count = sum(count)
-  ) 
-
-season_totals <- season_zones %>%
-  group_by(season) %>%
-  summarise(
-    shot_zone = "total",
-    count = sum(count)
-  )
-
-season_zones <- rbind(season_zones, season_totals)
-season_zones_table <- season_zones %>%
-  pivot_wider(
-    names_from = shot_zone,
-    values_from = count
-  ) 
+for(i in 1:4){
+  names(season_zones_table)[names(season_zones_table) == names(season_zones_table)[i + 1]] <- stat_names[i]
+}
 season_zones_table %>%
   mutate(
-    across(c(1:4), .fns = ~./total)
+    across(c(2:5), .fns = ~./total)
   ) %>%
   select(-c(total)) %>%
   pivot_longer(
@@ -91,7 +67,7 @@ season_zones_table %>%
 
 # Heat Map
 
-![heatmap](heatmap.gif)
+![Heatmap of all shots in the NBA in the past decade](heatmap.gif)
 
 
 # You can even create tabs if you want! {.tabset .tabset-fade .tabset-pills}
