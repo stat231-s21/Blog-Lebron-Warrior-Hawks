@@ -1,7 +1,7 @@
 ---
-title: "Your Project Title Here"
-author: "Your Names Here"
-date: "Add a date"
+title: "Evolution of the NBA In the Past Decade"
+author: "Teddy B., Kevin J., Kevin M."
+date: "`r Sys.Date()`"
 output:
   rmdformats::readthedown:
     thumbnails: false
@@ -72,6 +72,8 @@ You can include [Links](https://www.datadreaming.org/post/r-markdown-theme-galle
 You can embed a gif.
 
 ![pugs](https://media.giphy.com/media/XHVmD4RyXgSjd8aUMb/giphy.gif)
+
+![heatmap](heatmap.gif)
 
 
 # You can even create tabs if you want! {.tabset .tabset-fade .tabset-pills}
