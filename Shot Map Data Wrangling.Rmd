@@ -261,7 +261,9 @@ season_zones_table %>%
     y = "\nPercentages\n",
     x = "\nYear\n"
   )
+write.csv(season_zones_table, "Data/season_zones_table.csv")
 ```
+
 
 ```{r}
 season_zones %>%
