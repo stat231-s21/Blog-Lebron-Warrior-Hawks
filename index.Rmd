@@ -11,67 +11,85 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.align="center")
 library(tidyverse)
-```
-
-# Header 1
-
-## Header 2
-
-### Header 3
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For example, you can include **Bold** and _Italic_ and `Code` text.  For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-You should test out updating your GitHub Pages website:
-
-- clone your group's blog project repo in RStudio
-- update "Your Project Title Here" to a new title in the YAML header
-- knit `index.Rmd` 
-- commit and push BOTH the `index.Rmd` and the `index.html` files
-- go to https://stat231-s21.github.io/Blog-Lebron-Warrior-Hawks/ to see the published test document (this is publicly available!)
-
-## Including code and plots
-
-You can embed code as normal, for example:
-
-```{r cars}
-summary(cars)
-```
-
-Let's clean up the format of that output:
-
-```{r pretty, echo=FALSE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(tidyr)
 library(kableExtra)
-summary(cars) %>%
-  kable(col.names = c("Speed", "Distance")
-        , row.names = F) %>%
-  kable_styling(bootstrap_options = "striped"
-                , full_width = F) %>%
-  row_spec(0, bold = T, underline = T) %>%
-  column_spec(1:2, width = "1.5in") 
 ```
 
-In a study from the 1920s, fifty cars were used to see how the speed of the car and the distance taken to stop were related.  Speeds ranged between `r min(cars$speed)` and `r max(cars$speed)` mph.  Distances taken to stop ranged between `r min(cars$dist)` and `r max(cars$dist)` feet, with the middle 50% falling between `r as.numeric(quantile(cars$dist)[2])` and `r as.numeric(quantile(cars$dist)[4])` feet.  
+# Introduction
 
-You can also embed plots as normal, for example:
+# Shot Data and Mapping
 
-```{r figure1, echo=FALSE}
-ggplot(data = cars, aes(x = speed, y = dist)) + 
-  geom_point() + 
-  labs(x = "Speed of car (mph)"
-       , y = "Distance taken to stop (ft)"
-       , title = "cars data (1920s)")
+## Shot Data using `ballr` package and the NBA API
+
+# Player Season Data
+
+# Shot Type Graph and Table
+
+```{r, line_graph, echo = FALSE, message = FALSE}
+df <- read.csv("../Data/total_shot_data.csv") %>%
+  select(-c(X))
+shot_zone_basic_list = c("Above the Break 3", "Backcourt", "In The Paint (Non-RA)", "Left Corner 3", "Mid-Range", "Restricted Area", "Right Corner 3")
+
+season_zones <- df %>%
+  group_by(season, shot_zone_basic) %>%
+  summarise(
+    count = n()
+  ) %>% 
+  filter(shot_zone_basic %in% shot_zone_basic_list) %>%
+  mutate(shot_zone = case_when(grepl("3", shot_zone_basic) ~ "Three-pointers",
+                               shot_zone_basic == "Backcourt" ~ "Three-pointers",
+                               TRUE ~ shot_zone_basic)) %>%
+  group_by(season, shot_zone) %>%
+  summarise(
+    count = sum(count)
+  ) 
+
+season_totals <- season_zones %>%
+  group_by(season) %>%
+  summarise(
+    shot_zone = "total",
+    count = sum(count)
+  )
+
+season_zones <- rbind(season_zones, season_totals)
+season_zones_table <- season_zones %>%
+  pivot_wider(
+    names_from = shot_zone,
+    values_from = count
+  ) 
+season_zones_table %>%
+  mutate(
+    across(c(1:4), .fns = ~./total)
+  ) %>%
+  select(-c(total)) %>%
+  pivot_longer(
+    cols = 2:5,
+    names_to = "shot_zone",
+    values_to = "percentage",
+  ) %>%
+  rowwise() %>%
+  mutate(year = as.numeric(strsplit(season, "-")[[1]][1])) %>%
+  ggplot(mapping = aes(x = year, y = percentage, color = shot_zone)) +
+  geom_line() + 
+  scale_y_continuous(labels = scales::percent) +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020)) + 
+  labs(
+    title = "\n Percentages of Shots Taken In Each Area Each Season",
+    subtitle = "From 2010-2021",
+    color = "Shot Zone Area",
+    y = "\nPercentages\n",
+    x = "\nYear\n"
+  )
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r, table, echo = FALSE}
+season_zones_table %>% 
+  rename(Season = season) %>%
+  kable()
+```
 
-
-## Including links and images
-
-You can include [Links](https://www.datadreaming.org/post/r-markdown-theme-gallery/) and images ![team logo](https://raw.githubusercontent.com/stat231-s21/Blog-Lebron-Warrior-Hawks/main/images/s2g1-economics-sports.png)
-
-You can embed a gif.
-
-![pugs](https://media.giphy.com/media/XHVmD4RyXgSjd8aUMb/giphy.gif)
+# Heat Map
 
 ![heatmap](heatmap.gif)
 
