@@ -125,6 +125,51 @@ In the table above, it is also apparent that the total number of shots has incre
 ## Add more code for this
 Using the BallR package, we can generate heatmaps of the shots in different locations around the league. The heat map provides several advantages. First is that not all shots in the same zone are of the same quality. For example, three point shots in the corners are among the most efficient shots in basketball and are significantly more valuable than three point shots “above the break” where the line is curved. In addition, formerly popular areas to shoot in the midrange such as the elbows and baseline jumpshots have declined significantly.
 
+In the documentation, here is how the `generate_heatmap_chart` function works. 
+
+```{r, eval = FALSE}
+generate_heatmap_chart = function(shots, base_court, court_theme = court_themes$dark) {
+  base_court +
+    stat_density_2d(
+      data = shots,
+      aes(x = loc_x, y = loc_y, fill = stat(density / max(density))),
+      geom = "raster", contour = FALSE, interpolate = TRUE, n = 200
+    ) +
+    geom_path(
+      data = court_points,
+      aes(x = x, y = y, group = desc),
+      color = court_theme$lines
+    ) +
+    scale_fill_viridis_c(
+      "Shot Frequency    ",
+      limits = c(0, 1),
+      breaks = c(0, 1),
+      labels = c("low", "high        "),
+      option = "inferno",
+      guide = guide_colorbar(barwidth = 10)
+    ) +
+    theme(legend.text = element_text(size = rel(0.6)))
+}
+```
+
+Using the other objects generated from the `ballr` package mentioned before, we can write a for loop to generate the heat maps for all of the desired seasons, and plot them below.
+
+```{r, eval = FALSE}
+for(i in 0:10){
+  curr_season = paste0(2010 + i,"-",11+i)
+  output %>%
+  filter(season == curr_season, shot_zone_basic %in% shot_zone_basic_list) %>%
+  generate_heatmap_chart(
+    base_court = plot_court(court_themes$dark),
+    court_theme = court_themes$dark
+  ) + labs(
+    title = "Heat Map of All Shots",
+    subtitle = paste(curr_season, "Season")
+  )
+  ggsave(paste0(curr_season, ".png"))
+}
+```
+
 ![Heatmap of all shots in the NBA in the past decade](heatmap.gif)
 
 # Shiny App Player Comparisons
@@ -146,11 +191,11 @@ In this app, we can compare the similarity of a player’s 2021 season with hist
 
 
 # Conclusions
-How has the league play style changed over time?
+## How has the league play style changed over time?
 
 By analyzing each year, it is evident that the league has undergone drastic changes in the types of shots that are the most valued. It is apparent that there has been a dramatic shift from shooting midrange jumpshots to three-point jumpshots, specifically corner three-point shots. It is clear that in previous years offenses favored taking shots as close to the basket as possible. Due to the fact that restricted area shots are the most efficient shots in basketball, the decline in percentage of shots in the restricted area may be caused by defenses being more willing to prevent these shots in the first place. As such, the shot graph and heatmaps demonstrate how teams are trying to shoot more efficient shots and prevent other teams from shooting efficient shots instead of just trying to shoot closer to the basket. 
 
-How similar are current day players to historical greats?
+## How similar are current day players to historical greats?
 
 With our Shiny app, it can be seen that players today are statistically similar to other modern day players rather than players of previous generations. As such, when comparing how “good” a player is, it is not very useful to compare statistics across large time periods. Instead, players should be compared relative to the peers they play against. Thus, comparing the statistical profile of Lebron James versus Michael Jordan is rather pointless as they play in such different eras. In addition, some historical comparisons are quite surprising. For example, the top historical comparisons to Nikola Jokic, the leading candidate for MVP for the 2020-2021 season are Larry Bird and Lebron James, both of whom are much smaller than Jokic and play different positions. However, Bird, James, and Jokic share great playmaking and efficiency on offense, leading to the statistical similarity.  
 
