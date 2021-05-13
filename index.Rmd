@@ -17,6 +17,13 @@ library(kableExtra)
 ```
 
 # Introduction
+Basketball is a sport that is continuously evolving. Since its invention, there have been many changes in both the rules and the style of play. Over the past decade, the league has undergone a rapid change due to both the increase in the use of analytics and changes in officiating. 
+
+NBA basketball in the 2010s will be remembered for the introduction of the “pace and space” era, where teams play at a faster pace compared to the previous two decades and the explosion in the number of three-point shots per game. Stylistically, many teams saw the success of Stephen Curry and the Golden State Warriors as well as the Houston Rockets and began to emphasize the importance of being able to space the floor to draw out defenders. 
+
+The rise of analytics, especially with Daryl Morey and the Rockets has led to more layups and three-point attempts while also creating a sharp decline in long-range twos and midrange shots. The midrange jumpshot, the staple for superstars such as Kobe Bryant and Michael Jordan, has been mostly abandoned except by the most efficient scorers such as Chris Paul and Kevin Durant. Combined with officiating favoring offense over defense, players are now scoring more points with better efficiency compared to 10 years ago.
+
+This blog will use two methods to observe the shift in strategy over the course of the history of the NBA. The first is to analyze shot location data, where the trend in the different locations where players shoot the ball are tracked since the 2010-2011 season. The second is by comparing present-day seasons to historical seasons. Finding the top historical comparisons to players today is interesting because one can determine if there are any players today that are similar to historical greats. In addition one can examine how the league has changed by comparing “old-school” players such as Demar Derozan versus more modern players such as Nikola Jokic. 
 
 # Shot Data and Mapping
 To get the shot data, we found a `R` package online which gets shot map data from the NBA stats website and API called BallR (`ballr`). 
@@ -67,8 +74,10 @@ write.csv(df, "Data/total_shot_data.csv")
 Our final data set was a `.csv` file that was over half a gigabyte in memory and over 1.9 million observations, after running our code for a few hours. 
 
 # Player Season Data
+The data used was scrapped from Basketball Reference. For each player and each season since 1982, the per-game and advanced statistics were collected. The original dataset was over 17,000 player-seasons, each with 43 statistical variables. In order to cut down the number of players analyzed, we decided to only examine “good” seasons, which were seasons where the player had a VORP (value over replacement player) of 1. To put into context, typically there are usually around 100 players per year with over 1 VORP. In order to account for the fact that many players play on multiple teams in one season, we only examine per-game and advanced stats rather than total stats and take the average for the player over the course of the season. Thus, we are able to obtain a relatively complete statistical profile for almost every “good” player for each year of their career.   
 
 # Shot Type Graph and Table
+In this graph we can see the trends in the percentage of shots in different zones for the league as a whole over the past decade. It is immediately apparent the sharp decline in the number of mid-range shots over the course of the decade. The decline of the mid-range shot has been fueled by an increase in three point shots as well as shots in the paint (near but not right at the basket). It is also noteworthy that the percentage of shots in the restricted area has also declined over the past decade even though it is the most efficient shot. This is likely due to defenses focusing on limiting these efficient shots as much as possible.  
 
 ```{r, line_graph, echo = FALSE, message = FALSE}
 stat_names <- c("In The Paint (Non-RA)", "Mid-Range", "Restricted Area", "Three-pointers")
@@ -105,31 +114,56 @@ season_zones_table %>%
 
 ```{r, table, echo = FALSE}
 season_zones_table %>% 
-  rename(Season = season) %>%
+  rename(Season = season, Total_Shots = total) %>%
   kable()
 ```
+In the table above, it is also apparent that the total number of shots has increased over the past ten years (2020 and 2021 seasons are cut short but per game shots are up). This is largely due to teams playing at a faster pace. While this graph captures trends at a high level, we would also like to view exactly where players today are shooting more shots compared to ten years ago. 
+
 
 # Heat Map
 
+## Add more code for this
+Using the BallR package, we can generate heatmaps of the shots in different locations around the league. The heat map provides several advantages. First is that not all shots in the same zone are of the same quality. For example, three point shots in the corners are among the most efficient shots in basketball and are significantly more valuable than three point shots “above the break” where the line is curved. In addition, formerly popular areas to shoot in the midrange such as the elbows and baseline jumpshots have declined significantly.
+
 ![Heatmap of all shots in the NBA in the past decade](heatmap.gif)
 
+# Shiny App Player Comparisons
+In this app, we can compare the similarity of a player’s 2021 season with historical seasons dating back to 1982. Our similarity index is the euclidean distance taking into account all of the 43 statistical variables that are in the dataset. After normalizing each variable, we are able to output a list of the most similar historical season to the selected player’s 2021 season. It is interesting to observe that the most similar players tend to be recent rather than further in the past. This indicates that the playstyle of the league has shifted dramatically as players are different than before from a statistical standpoint. While this method of comparing seasons can be improved, it is still valuable in determining that most 2021 seasons are similar statistically to seasons in the past 5 years rather than in a previous era. 
 
-# You can even create tabs if you want! {.tabset .tabset-fade .tabset-pills}
+[Here is our link to our shiny app!](https://kejin22.shinyapps.io/Blog-Lebron-Warrior-Hawks/)
 
-## Bulleted list
+## Examples of player comparisons {.tabset .tabset-fade .tabset-pills}
 
-You can make a bulleted list like this:
+### LeBron James
+![2020-2021 LeBron James Player Comparisons](images/lebronjames_comparison.png)
 
-- item 1
-- item 2
-- item 3
+### Nikola Jokić
+![2020-2021 Nikola Jokić Player Comparisons](images/nikolajokic_comparison.png)
+
+### DeMar DeRozan
+![2020-2021 DeMar DeRozan Player Comparisons](images/demarderozan_comparison.png)
 
 
-## Numbered list
 
-You can make a numbered list like this
+# Conclusions
+How has the league play style changed over time?
 
-1. First thing I want to say
-2. Second thing I want to say
-3. Third thing I want to say
+By analyzing each year, it is evident that the league has undergone drastic changes in the types of shots that are the most valued. It is apparent that there has been a dramatic shift from shooting midrange jumpshots to three-point jumpshots, specifically corner three-point shots. It is clear that in previous years offenses favored taking shots as close to the basket as possible. Due to the fact that restricted area shots are the most efficient shots in basketball, the decline in percentage of shots in the restricted area may be caused by defenses being more willing to prevent these shots in the first place. As such, the shot graph and heatmaps demonstrate how teams are trying to shoot more efficient shots and prevent other teams from shooting efficient shots instead of just trying to shoot closer to the basket. 
 
+How similar are current day players to historical greats?
+
+With our Shiny app, it can be seen that players today are statistically similar to other modern day players rather than players of previous generations. As such, when comparing how “good” a player is, it is not very useful to compare statistics across large time periods. Instead, players should be compared relative to the peers they play against. Thus, comparing the statistical profile of Lebron James versus Michael Jordan is rather pointless as they play in such different eras. In addition, some historical comparisons are quite surprising. For example, the top historical comparisons to Nikola Jokic, the leading candidate for MVP for the 2020-2021 season are Larry Bird and Lebron James, both of whom are much smaller than Jokic and play different positions. However, Bird, James, and Jokic share great playmaking and efficiency on offense, leading to the statistical similarity.  
+
+On the other hand, DeMar Derozan, one of the few throwback players in the NBA, is not similar to many modern players and is instead comparable to volume shooters in the 1990s and 2000s. Another historical great that many good players today such as Giannis Antetokounmpo and Joel Embiid are similar to is Charles Barkley, who was dominant in the 1990s with his great rebounding and interior scoring skills. What is a little ironic is that Barkley is amongst the most critical of current-day players for being “soft” and “technique-driven” when he was amongst the first players with a “modern” game.
+
+# Limitations and Future Research
+
+## Limitations
+For the heatmaps we generated, we excluded shots around the basket as due to the high concentration of shots in that area, it would have made it difficult to visualize shots in other zones around the basketball court. For each year, if we were to include at-the-rim shots, that area would be a bright yellow. 
+
+When calculating the euclidean distance between the seasons of different players, we weigh each stat by the same amount. When evaluating players, not all stats are equally important. However, there is also not much agreement on which statistic matters the most. As such, this is an area that can be improved by allowing users to select which stats are important to them and weigh each stat differently. 
+
+## Future Research
+While we examine the volume of shots from different areas of the court, we have not examined the efficiency of different shots. For example, it may very well be the case that players are shooting more three point shots but they are now shooting at a lower percentage than before due to higher volume. As such, examining trends over time with regards to efficiency would be an interesting project. Identifying areas where players score the most efficiently can lead to the evolution of new strategies to both take more efficient shots and deny these opportunities for opponents. In the graphic below from FiveThirtyEight, one can determine the points-per-shot for each location between 2013-14 to 2017-18:
+
+![Points Per Shot](images/538image.png)
