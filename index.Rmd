@@ -121,8 +121,6 @@ In the table above, it is also apparent that the total number of shots has incre
 
 
 # Heat Map
-
-## Add more code for this
 Using the BallR package, we can generate heatmaps of the shots in different locations around the league. The heat map provides several advantages. First is that not all shots in the same zone are of the same quality. For example, three point shots in the corners are among the most efficient shots in basketball and are significantly more valuable than three point shots “above the break” where the line is curved. In addition, formerly popular areas to shoot in the midrange such as the elbows and baseline jumpshots have declined significantly.
 
 In the documentation, here is how the `generate_heatmap_chart` function works. 
