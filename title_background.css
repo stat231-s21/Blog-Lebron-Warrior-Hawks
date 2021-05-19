@@ -25,11 +25,11 @@ h2 {
 }
 
 #toc .nav a {
-  background-color: white;
+  background-color: black;
 }
 
 #sidebar a {
-  color: black
+  color: white
 } 
 
 #toc .nav .active ul li a {
