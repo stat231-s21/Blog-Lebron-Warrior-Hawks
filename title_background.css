@@ -1,0 +1,42 @@
+a {
+  color: white;
+}
+
+.title {
+  font-size: 350% !important;
+  text-align: center;
+  font-weight: 900;
+  text-decoration: underline;
+}
+
+h1 {
+  font-size: 250%;
+  margin-bottom: 0.9em;
+}
+
+h2 {
+  font-size: 200%;
+}
+
+#TOC {
+  background: url("https://cdn.sstatic.net/Sites/stackoverflow/company/img/logos/so/so-logo.png?v=9c558ec15d8a");
+  background-size: contain;
+  padding-top: 80px !important;
+  background-repeat: no-repeat;
+}
+
+#table-of-contents .nav a {
+  background-color: white;
+}
+
+#sidebar a {
+  color: white
+} 
+
+#table-of-contents .nav .active ul li a {
+  color: white !important;
+}
+
+#content pre {
+  margin-top: 24px;
+}

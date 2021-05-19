@@ -4,6 +4,7 @@ author: "Teddy B., Kevin J., Kevin M."
 date: "`r Sys.Date()`"
 output:
   rmdformats::readthedown:
+    css: "title_background.css"
     thumbnails: false
     highlight: NULL
 ---
@@ -17,9 +18,9 @@ library(kableExtra)
 ```
 
 # Introduction
-Basketball is a sport that is continuously evolving. Since its invention, there have been many changes in both the rules and the style of play. Over the past decade, the league has undergone a rapid change due to both the increase in the use of analytics and changes in officiating. 
+Basketball is a sport that is continuously evolving. Ever since its invention in 1891, there have been many changes in both the rules and the style of play. Over the past decade, the league has undergone a rapid change due to both the increase in the use of analytics and changes in officiating. 
 
-NBA basketball in the 2010s will be remembered for the introduction of the “pace and space” era, where teams play at a faster pace compared to the previous two decades and the explosion in the number of three-point shots per game. Stylistically, many teams saw the success of Stephen Curry and the Golden State Warriors as well as the Houston Rockets and began to emphasize the importance of being able to space the floor to draw out defenders. 
+NBA basketball in the 2010s will be remembered as the beginning of the “pace and space” era, where teams play at a faster pace compared to the previous two decades and the explosion in the number of three-point shots per game. Stylistically, many teams saw the success of Stephen Curry and the Golden State Warriors as well as the Houston Rockets and began to emphasize the importance of being able to space the floor to draw out defenders. 
 
 The rise of analytics, especially with Daryl Morey and the Rockets has led to more layups and three-point attempts while also creating a sharp decline in long-range twos and midrange shots. The midrange jumpshot, the staple for superstars such as Kobe Bryant and Michael Jordan, has been mostly abandoned except by the most efficient scorers such as Chris Paul and Kevin Durant. Combined with officiating favoring offense over defense, players are now scoring more points with better efficiency compared to 10 years ago.
 
