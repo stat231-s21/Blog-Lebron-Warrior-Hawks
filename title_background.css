@@ -18,23 +18,22 @@ h2 {
   font-size: 200%;
 }
 
-#TOC {
-  background: url("https://cdn.sstatic.net/Sites/stackoverflow/company/img/logos/so/so-logo.png?v=9c558ec15d8a");
-  background-size: contain;
-  padding-top: 80px !important;
+#toc {
+  background-image: url(https://st.depositphotos.com/1483427/1568/i/600/depositphotos_15683505-stock-photo-basketballs-background.jpg);
   background-repeat: no-repeat;
+  background-size: cover;
 }
 
-#table-of-contents .nav a {
+#toc .nav a {
   background-color: white;
 }
 
 #sidebar a {
-  color: white
+  color: black
 } 
 
-#table-of-contents .nav .active ul li a {
-  color: white !important;
+#toc .nav .active ul li a {
+  color: black !important;
 }
 
 #content pre {
