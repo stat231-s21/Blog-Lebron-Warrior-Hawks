@@ -20,7 +20,7 @@ library(kableExtra)
 # Introduction
 Basketball is a sport that is continuously evolving. Ever since its invention in 1891, there have been many changes in both the rules and the style of play. Over the past decade, the league has undergone a rapid change due to both the increase in the use of analytics and changes in officiating. 
 
-NBA basketball in the 2010s will be remembered as the beginning of the “pace and space” era. Teams now play at a faster pace compared to the previous two decades and shoot far more three-point shots per game. This stylistic change is in part due to the success of the Golden State Warriors lead by Stephen Curry and the Houston Rockets and began to emphasize the importance of being able to space the floor to draw out defenders. 
+NBA basketball in the 2010s will be remembered as the beginning of the “pace and space” era. Teams now play at a faster pace compared to the previous two decades and shoot far more three-point shots per game. This stylistic change is in part due to the success of the Golden State Warriors lead by Stephen Curry and the Houston Rockets, which forced other teams in the league to also emphasize spacing the floor to draw out defenders. 
 
 The rise of analytics, especially with Daryl Morey and the Rockets has led to more layups and three-point attempts while also creating a sharp decline in long-range twos and midrange shots. The midrange jumpshot, the staple for superstars such as Kobe Bryant and Michael Jordan, has been mostly abandoned except by the most efficient scorers such as Chris Paul and Kevin Durant. Combined with officiating favoring offense over defense, players are now scoring more points with better efficiency compared to 10 years ago.
 
@@ -211,3 +211,5 @@ When calculating the euclidean distance between the seasons of different players
 While we examine the volume of shots from different areas of the court, we have not examined the efficiency of different shots. For example, it may very well be the case that players are shooting more three point shots but they are now shooting at a lower percentage than before due to higher volume. As such, examining trends over time with regards to efficiency would be an interesting project. Identifying areas where players score the most efficiently can lead to the evolution of new strategies to both take more efficient shots and deny these opportunities for opponents. In the graphic below from FiveThirtyEight, one can determine the points-per-shot for each location between 2013-14 to 2017-18:
 
 ![Points Per Shot](images/538image.png)
+#Citations
+
