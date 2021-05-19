@@ -211,5 +211,10 @@ When calculating the euclidean distance between the seasons of different players
 While we examine the volume of shots from different areas of the court, we have not examined the efficiency of different shots. For example, it may very well be the case that players are shooting more three point shots but they are now shooting at a lower percentage than before due to higher volume. As such, examining trends over time with regards to efficiency would be an interesting project. Identifying areas where players score the most efficiently can lead to the evolution of new strategies to both take more efficient shots and deny these opportunities for opponents. In the graphic below from FiveThirtyEight, one can determine the points-per-shot for each location between 2013-14 to 2017-18:
 
 ![Points Per Shot](images/538image.png)
-#Citations
+
+# Citations and References
+
+- [Basketball-Reference](https://www.basketball-reference.com/)
+- [Official NBA Stats Website and API](https://www.nba.com/stats/)
+- [BallR Package](https://github.com/toddwschneider/ballr/)
 
